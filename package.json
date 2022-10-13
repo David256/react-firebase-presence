@@ -1,0 +1,42 @@
+{
+  "name": "react-firebase-presence",
+  "version": "1.0.0",
+  "description": "A React component that allows to use Firebase Presence to track sessions.",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "files": [
+    "dist"
+  ],
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "rollup": "rollup -c",
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/David256/react-firebase-presence.git"
+  },
+  "keywords": [
+    "firebase",
+    "react",
+    "component",
+    "presence"
+  ],
+  "author": "David Waster",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/David256/react-firebase-presence/issues"
+  },
+  "homepage": "https://github.com/David256/react-firebase-presence#readme",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^23.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.0",
+    "@rollup/plugin-typescript": "^9.0.1",
+    "@types/react": "^18.0.21",
+    "react": "^18.2.0",
+    "rollup": "^2.79.1",
+    "rollup-plugin-dts": "^4.2.3",
+    "tslib": "^2.4.0",
+    "typescript": "^4.8.4"
+  }
+}
