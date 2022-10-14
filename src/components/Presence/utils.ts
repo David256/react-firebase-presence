@@ -2,10 +2,9 @@ import firebase from 'firebase/compat/app';
 import type { SessionPayload } from './types';
 import { sessionStatus } from './constants';
 
-export function createSessionPayload<T = any>(userId: string, organizationId: string) {
+export function createSessionPayload<T>(data?: T) {
   const payload: SessionPayload<T> = {
-    userId,
-    organizationId,
+    data,
     startTimestamp: firebase.database.ServerValue.TIMESTAMP,
     status: sessionStatus.ONLINE,
   };
@@ -24,6 +23,6 @@ export function createSessionPayload<T = any>(userId: string, organizationId: st
   const newPayload = { ...payload };
   delete newPayload.startTimestamp;
   newPayload.status = sessionStatus.OFFLINE;
-  newPayload.endTimestamp = firebase.database.ServerValue.TIMESTAMP;
+  newPayload.endTimestamp = ServerValue.TIMESTAMP;
   return newPayload;
 };

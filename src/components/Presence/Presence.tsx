@@ -6,14 +6,14 @@ import { useEffect, useState } from 'react';
 
 import { createSessionPayload, destroySessionPayload } from './utils';
 
-export interface PresenceProps {
-  userId: string;
-  organizationId: string;
+export interface PresenceProps<T> {
+  data?: T,
   // Firebase stuffs
   realtimeDB: firebase.database.Database,
   // Loggers
   debuglog: (...args: any[]) => void;
   errorlog: (...args: any[]) => void;
+  collectionNameCreator: () => { collectionName: string, childName: string };
   /**
    * This prop enable us to configure as a global presence manager, and avoid
    * disconnect the session when the component gets be unmounted.
@@ -23,7 +23,7 @@ export interface PresenceProps {
   global?: boolean;
 };
 
-function Presence(props: PresenceProps) {
+function Presence<T = any>(props: PresenceProps<T>) {
   /* eslint-disable no-console */
   const {
     debuglog: LOG = console.debug,
@@ -34,9 +34,10 @@ function Presence(props: PresenceProps) {
   const {
     realtimeDB,
     global: isGlobal,
+    data,
   } = props;
 
-  const [payload, setPayload] = useState(createSessionPayload(props.userId, props.organizationId));
+  const [payload, setPayload] = useState(createSessionPayload<T>(data));
   const [isDeactive, setIsDeactive] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
 
@@ -52,9 +53,11 @@ function Presence(props: PresenceProps) {
 
       // Get the path in realtime
       LOG('reset the collection path');
+      const { collectionName, childName } = props.collectionNameCreator();
+      userSessionsRealtime = realtimeDB.ref(`/user_sessions/${collectionName}`).child(childName).push();
+
       if (isGlobal) {
-        userSessionsRealtime = realtimeDB.ref(`/user_sessions/global`).child(`${props.userId}`).push();
-        beaconRealtime = realtimeDB.ref(`/user_sessions/beacon`).child(`${props.userId}`);
+        beaconRealtime = realtimeDB.ref(`/user_sessions/beacon`).child(childName);
 
         // Check if the beacon is false to set true
         const data = await beaconRealtime.get();
@@ -76,8 +79,6 @@ function Presence(props: PresenceProps) {
             ERROR('tried to set beacon as true in false-found-value', err);
           }
         }        
-      } else {
-        userSessionsRealtime = realtimeDB.ref(`/user_sessions/local`).child(`${props.userId}`).push();
       }
 
       // Get this object to save a value when the FB gets be disconnected
@@ -139,9 +140,6 @@ function Presence(props: PresenceProps) {
   };
 
   useEffect(() => {
-    if (!props.userId) return;
-    if (!props.organizationId) return;
-
     LOG('component have been mounted');
 
     // Get & use presence
