@@ -1,1 +1,1 @@
-export { default as LOL } from './LOL';
+export { default as Presence } from './Presence';
