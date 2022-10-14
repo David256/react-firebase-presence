@@ -38,5 +38,8 @@
     "rollup-plugin-dts": "^4.2.3",
     "tslib": "^2.4.0",
     "typescript": "^4.8.4"
+  },
+  "peerDependencies": {
+    "firebase": "^9.12.1"
   }
 }
