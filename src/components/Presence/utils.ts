@@ -4,10 +4,13 @@ import { sessionStatus } from './constants';
 
 export function createSessionPayload<T>(data?: T) {
   const payload: SessionPayload<T> = {
-    data,
     startTimestamp: firebase.database.ServerValue.TIMESTAMP,
     status: sessionStatus.ONLINE,
   };
+
+  if (data !== undefined) {
+    payload.data = data;
+  }
 
   return payload;
 }
@@ -23,6 +26,6 @@ export function createSessionPayload<T>(data?: T) {
   const newPayload = { ...payload };
   delete newPayload.startTimestamp;
   newPayload.status = sessionStatus.OFFLINE;
-  newPayload.endTimestamp = ServerValue.TIMESTAMP;
+  newPayload.endTimestamp = firebase.database.ServerValue.TIMESTAMP;
   return newPayload;
 };
